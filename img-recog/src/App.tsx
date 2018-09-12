@@ -1,114 +1,121 @@
 import { Button } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { stringify } from 'querystring';
+
 import * as React from 'react';
-import Dropzone from 'react-dropzone'
+import Select from 'react-select';
 
 import './App.css';
-import {ThemeContext, themes} from './theme-context';
 
-interface IState {
-  imageFiles: any[],
-  results: any,
-  dropzone: any,
-  theme: any,
-  toggleTheme: any
-}
 
-export default class App extends React.Component<{}, IState>{
+
+const options = [
+  { value: 'auckland nz', label: 'Auckland' },
+  { value: 'hamilton nz', label: 'Hamilton' },
+  { value: 'wellington nz', label: 'Wellington' },
+  { value: 'christchurch nz', label: 'ChristChurch' },
+  { value: 'queenstown nz', label: 'Queenstown' }
+];
+
+const theme = createMuiTheme({
+  overrides: {
+    // Name of the component ⚛️ / style sheet
+    MuiSelect: {
+      // Name of the rule
+      root: {
+        // Some CSS
+        width: '60%',
+        marginTop: '20px',
+
+      },
+    },
+    MuiButton:{
+      root:{
+        width: '100%',
+        marginTop: '10px',
+        backgroundColor:'#ffc4fc',
+        alignSelf: 'centered'
+        
+      }
+    }
+  },
+});
+
+export default class App extends React.Component{
   
-  constructor(props: any) {
-    super(props);
-  
-    this.state = {
-      imageFiles: [],
-      results: "",
-      dropzone: this.onDrop.bind(this),
-  
-      theme: themes.dark,
-      toggleTheme: this.toggleTheme(),
+    public state = {
+      results:{
+        city:'',
+        condition:'',
+        temp:'',
+        wind:'',
+      },
+      selectedOption:null,
+      data:null,
+      showResults:false,
     };
+
+  public handleChange = (selectedOption: any) => {
+    this.setState({ selectedOption });
   }
 
-  public toggleTheme = () => {
-    this.setState(state => ({
-      theme:
-        state.theme === themes.light
-          ? themes.dark
-          : themes.light,
-    }));
-  };
-
-  public onDrop(files: any) {
-    this.setState({
-      imageFiles: files,
-      results: ""
-    })
-    const file = files[0]
-    const reader = new FileReader();
-    reader.onload = (readerEvt) => {
-        const binaryString = readerEvt.target!!.result;
-        this.upload(btoa(binaryString))
-    };
-
-    reader.readAsBinaryString(file);
-  }
-
-  public upload(base64String: string) {
-    fetch('https://danktrigger.azurewebsites.net/api/dank', {
+  public upload = ()=> {
+    const query = stringify(this.state.selectedOption);
+    if(!(query==='')){
+    fetch('http://api.apixu.com/v1/current.json?key=429bf4f88d29411ba4985844180809&days=7&q='+query, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: JSON.stringify({
-        file: base64String,
-      })
-    })
-    .then((response : any) => {
-      if (!response.ok) {
-        this.setState({results: response.statusText})
+        'Content-Type': 'application/json'  
       }
-      else {
-        response.json().then((data:any) => this.setState({results: data[0].class}))
-      }
-      return response
     })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ results:{
+          city: data.location.name+" :",
+          condition: data.current.condition.text,
+          temp: "Temperature : "+data.current.temp_c+ " C",
+          wind: "Wind Speed : "+data.current.wind_kph+ " kph",
+      }})
+     
+    });
+
+    
+    }else{
+      window.alert("Please select the city");
+    }
   }
+  
   
   public render() {
     return (
-      <div className="container-fluid">
-        <ThemeContext.Provider value={this.state}>
-        <ThemeContext.Consumer>
-        {theme => (
-          <div className="centreText" style={{backgroundColor: theme.theme.background, color: theme.theme.foreground}}>
-            {/* React components must have a wrapper node/element */}
-          <div className="dropZone">
-            <Dropzone onDrop={this.state.dropzone} style={{position: "relative"}}>
-              <div style={{height: '50vh'}}>
-                {
-                  this.state.imageFiles.length > 0 ? 
-                    <div>{this.state.imageFiles.map((file) => <img className="image" key={file.name} src={file.preview} /> )}</div> :
-                    <p>Try dropping some files here, or click to select files to upload.</p>
-                }  
-              </div>
-            </Dropzone>
-          </div>
-          <div  className="dank">
-          {
-            this.state.results === "" && this.state.imageFiles.length > 0 ?
-            <CircularProgress thickness={3} />:
-            <p>{this.state.results}</p>
-          }
-          </div>
-          </div>
-        )}
-      </ThemeContext.Consumer>
-      <div>
-  <Button onClick={this.toggleTheme}>Change Theme</Button>
-</div>
-      </ThemeContext.Provider>
-      </div>
+      <MuiThemeProvider theme={theme}>
+        <div className="container-fluid" id="body">
+          <br/>
+          <Select
+          value={this.state.selectedOption}
+          onChange={this.handleChange}
+          options={options}
+          id="select"/>
+          <Button onClick={this.upload} id="button">Find</Button>
+          <br/>
+
+          <br/>
+          <h1></h1>
+          <br/>
+          <table id="simple-board">
+               <tbody>
+                 <tr>
+                   <td>{this.state.results.city}</td>
+                   <td>{this.state.results.condition}</td>
+                   <td>{this.state.results.temp}</td>
+                   <td>{this.state.results.wind}</td>
+                 </tr>
+               </tbody>
+             </table>
+        </div>
+    </MuiThemeProvider>
+     
     );
   }
 }
