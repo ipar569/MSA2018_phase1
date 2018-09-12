@@ -19,7 +19,7 @@ p{
   align-content: center;
   align-items: center;
   font-size: 20px;
-  padding: 10px;
+  padding: 25px;
 }
 
   #body{
@@ -27,7 +27,8 @@ p{
   }
   
   h1 {
-    font-size: 150px;
+    color: bisque;
+    font-size: 25px;
   }
 
   #button{

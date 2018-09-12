@@ -50,6 +50,7 @@ export default class App extends React.Component{
         condition:'',
         temp:'',
         wind:'',
+        file:'',
       },
       selectedOption:null,
       data:null,
@@ -73,9 +74,10 @@ export default class App extends React.Component{
     .then(data => {
       this.setState({ results:{
           city: data.location.name+" :",
-          condition: data.current.condition.text,
+          condition: "Condition : "+data.current.condition.text,
           temp: "Temperature : "+data.current.temp_c+ " C",
           wind: "Wind Speed : "+data.current.wind_kph+ " kph",
+          file: data.current.condition.icon,
       }})
      
     });
@@ -99,15 +101,12 @@ export default class App extends React.Component{
           id="select"/>
           <Button onClick={this.upload} id="button">Find</Button>
           <br/>
-
-          <br/>
-          <h1></h1>
-          <br/>
+          <h1>Forecast: </h1>
           <table id="simple-board">
                <tbody>
                  <tr>
                    <td>{this.state.results.city}</td>
-                   <td>{this.state.results.condition}</td>
+                   <td>{this.state.results.condition}<img src={this.state.results.file}/></td>
                    <td>{this.state.results.temp}</td>
                    <td>{this.state.results.wind}</td>
                  </tr>
