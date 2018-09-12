@@ -33,10 +33,10 @@ const theme = createMuiTheme({
     MuiButton:{
       root:{
         width: '100%',
-        marginTop: '10px',
-        backgroundColor:'#ffc4fc',
-        alignSelf: 'centered'
-        
+        marginTop: '20px',
+        backgroundColor:'#d595d6',
+        alignSelf: 'centered',
+        color: 'white'
       }
     }
   },
@@ -106,7 +106,7 @@ export default class App extends React.Component{
                <tbody>
                  <tr>
                    <td>{this.state.results.city}</td>
-                   <td>{this.state.results.condition}<img src={this.state.results.file}/></td>
+                   <td>{this.state.results.condition}  <img src={this.state.results.file}/></td>
                    <td>{this.state.results.temp}</td>
                    <td>{this.state.results.wind}</td>
                  </tr>
