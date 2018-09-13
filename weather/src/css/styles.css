@@ -4,7 +4,7 @@ background: linear-gradient(90deg, rgba(9,6,9,1) 0%, rgba(69,8,70,1) 82%);
 }
 
 p{
-  color: aliceblue;
+  color: aquamarine;
 }
 
 .centreText {
@@ -16,12 +16,16 @@ p{
   width: 100%;
   align-self: auto;
   color: aliceblue;
-  align-content: center;
-  align-items: center;
+
   font-size: 20px;
-  padding: 25px;
 }
 
+td{
+  padding: 5px;
+  align-content: center;
+  
+  align-items: center;
+}
   #body{
     width: 80%;
   }

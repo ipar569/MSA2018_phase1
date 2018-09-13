@@ -65,15 +65,15 @@ export default class App extends React.Component{
     const query = stringify(this.state.selectedOption);
     if(!(query==='')){
     fetch('https://api.apixu.com/v1/current.json?key=429bf4f88d29411ba4985844180809&days=7&q='+query, {
-      method: 'GET',
+      method: 'POST',
     })
     .then(response => response.json())
     .then(data => {
       this.setState({ results:{
-          city: data.location.name+" :",
-          condition: "Condition : "+data.current.condition.text,
-          temp: "Temperature : "+data.current.temp_c+ " C",
-          wind: "Wind Speed : "+data.current.wind_kph+ " kph",
+          city: data.location.name+":",
+          condition: "Condition: "+data.current.condition.text,
+          temp: "Temperature: "+data.current.temp_c+ " C",
+          wind: "Wind Speed: "+data.current.wind_kph+ " kph",
           file: data.current.condition.icon,
       }})
      
@@ -102,7 +102,7 @@ export default class App extends React.Component{
           <table id="simple-board">
                <tbody>
                  <tr>
-                   <td>{this.state.results.city}</td>
+                   <td><p>{this.state.results.city}</p></td>
                    <td>{this.state.results.condition}  <img src={this.state.results.file}/></td>
                    <td>{this.state.results.temp}</td>
                    <td>{this.state.results.wind}</td>
