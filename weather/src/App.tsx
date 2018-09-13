@@ -64,11 +64,8 @@ export default class App extends React.Component{
   public upload = ()=> {
     const query = stringify(this.state.selectedOption);
     if(!(query==='')){
-    fetch('http://api.apixu.com/v1/current.json?key=429bf4f88d29411ba4985844180809&days=7&q='+query, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'  
-      }
+    fetch('https://api.apixu.com/v1/current.json?key=429bf4f88d29411ba4985844180809&days=7&q='+query, {
+      method: 'GET',
     })
     .then(response => response.json())
     .then(data => {
