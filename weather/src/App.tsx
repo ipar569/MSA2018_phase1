@@ -72,8 +72,8 @@ export default class App extends React.Component{
       this.setState({ results:{
           city: data.location.name+":",
           condition: "Condition: "+data.current.condition.text,
-          temp: "Temperature: "+data.current.temp_c+ " C",
-          wind: "Wind Speed: "+data.current.wind_kph+ " kph",
+          temp: "Temperature: "+data.current.temp_c+ "°C",
+          wind: "Wind Speed: "+data.current.wind_kph+ " km/h",
           file: data.current.condition.icon,
       }})
      
