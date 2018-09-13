@@ -1,8 +1,5 @@
 import { Button } from '@material-ui/core';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-
-import { stringify } from 'querystring';
-
 import * as React from 'react';
 import Select from 'react-select';
 
@@ -62,7 +59,7 @@ export default class App extends React.Component{
   }
 
   public upload = ()=> {
-    const query = stringify(this.state.selectedOption);
+    const query = JSON.stringify(this.state.selectedOption);
     if(!(query==='')){
     fetch('https://api.apixu.com/v1/current.json?key=429bf4f88d29411ba4985844180809&days=7&q='+query, {
       method: 'POST',
